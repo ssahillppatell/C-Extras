@@ -1,7 +1,7 @@
 #include "vector.h"
 #include <stdio.h>
 
-int main(int argc, char **argv) {
+int main() {
   Vector *v = vector_init(sizeof(int));
 
   for (int i = 0; i < 10; ++i) {

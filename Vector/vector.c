@@ -30,7 +30,7 @@ void *vector_get(Vector *v, int index) {
 }
 
 void vector_free(Vector *v) {
-  for (int i = 0; i < v->size; i++) {
+  for (size_t i = 0; i < v->size; i++) {
     free(vector_get(v, i));
   }
   free(v->items);
