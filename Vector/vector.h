@@ -20,4 +20,6 @@ void *vector_get(Vector *vector, int index);
 void *vector_front(Vector *vector);
 void *vector_end(Vector *vector);
 
+void vector_sort(Vector *vector, int (*comparator)(const void *, const void *));
+
 void vector_free(Vector *vector);
