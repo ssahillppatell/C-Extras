@@ -13,12 +13,30 @@ Map map_create(size_t size) {
   return map;
 }
 
-size_t hash(char *key, size_t size) {
-  size_t hash = 0;
-  for (int i = 0; key[i] != '\0'; i++) {
-    hash += key[i];
+size_t djb2 (char *str) {
+  size_t hash = 5381;
+  int c;
+
+  while((c = *str++)) {
+    hash = ((hash << 5) + hash) + c;
   }
-  return hash % size;
+
+  return hash;
+}
+
+size_t sdbm (char *str) {
+  size_t hash = 0;
+  int c;
+
+  while((c = *str++)) {
+    hash = c + (hash << 6) + (hash << 16) - hash;
+  }
+
+  return hash;
+}
+
+size_t hash(char *key, size_t size) {
+  return djb2(key) % size;
 }
 
 void map_insert(Map *map, char *key, int value) {
@@ -77,8 +95,14 @@ int map_remove(Map *map, char *key) {
   if (map->entries[index].key == NULL) {
     return -1;
   } else if (strcmp(map->entries[index].key, key) == 0) {
-    map->entries[index].key = NULL;
-    map->entries[index].value = 0;
+    if(map->entries[index].next != NULL) {
+      Entry *next = map->entries[index].next;
+      map->entries[index] = *next;
+      free(next);
+    } else {
+      map->entries[index].key = NULL;
+      map->entries[index].value = 0;
+    }
     return 0;
   } else {
     Entry *current = map->entries[index].next;
@@ -94,4 +118,22 @@ int map_remove(Map *map, char *key) {
     }
     return -1;
   }
+}
+
+void map_free(Map *map) {
+  for (size_t i = 0; i < map->size; i++) {
+    if (map->entries[i].key != NULL) {
+      free(map->entries[i].key);
+      if (map->entries[i].next != NULL) {
+        Entry *current = map->entries[i].next;
+        while (current != NULL) {
+          Entry *next = current->next;
+          free(current->key);
+          free(current);
+          current = next;
+        }
+      }
+    }
+  }
+  free(map->entries);
 }

@@ -18,3 +18,5 @@ Map map_create(size_t);
 void map_insert(Map *, char *, int);
 int map_get(Map *, char *);
 int map_remove(Map *, char *);
+
+void map_free(Map *);
