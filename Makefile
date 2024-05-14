@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g
 SRCDIR = $(DIR)
 UTILDIR = _Utilities
-BINDIR = bin
+BINDIR = .
 OBJDIR = obj
 
 # List of all utility directories
@@ -28,7 +28,6 @@ EXECUTABLE = $(BINDIR)/main
 all: clean $(EXECUTABLE)
 
 $(EXECUTABLE): $(UTILOBJS) $(MAINOBJS)
-	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
 $(UTILOBJS): $(OBJDIR)/%.o: $(UTILDIR)/%/main.c
@@ -40,6 +39,6 @@ $(MAINOBJS): $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(OBJDIR) $(EXECUTABLE)
 
 .PHONY: all clean
