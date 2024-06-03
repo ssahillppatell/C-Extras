@@ -8,28 +8,8 @@
 const char NEW_LINE = '\n';
 const char SPACE = ' ';
 
-char* find_most_frequent_word(Map map) {
-  char *most_frequent_word = NULL;
-  int most_frequent_word_count = 0;
-
-  for (size_t i = 0; i < map.size; i++) {
-    if(map.entries[i].key != NULL) {
-      if (map.entries[i].value > most_frequent_word_count) {
-        most_frequent_word = map.entries[i].key;
-        most_frequent_word_count = map.entries[i].value;
-
-        while(map.entries[i].next != NULL) {
-          i++;
-          if (map.entries[i].value > most_frequent_word_count) {
-            most_frequent_word = map.entries[i].key;
-            most_frequent_word_count = map.entries[i].value;
-          }
-        }
-      }
-    }
-  }
-
-  return most_frequent_word;
+int comparator(const void* a, const void* b) {
+  return ((Entry*)b)->value - ((Entry*)a)->value;
 }
 
 int main(int argc, char **argv) {
@@ -46,7 +26,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  Map map = map_create(10000);
+  Map map = map_create(100000);
 
   char **lines = string_split_by_character(content, NEW_LINE);
 
@@ -60,15 +40,10 @@ int main(int argc, char **argv) {
     free(tokens);
   }
 
-  // Top 10 most frequent words
-  char *most_frequent_word = NULL;
-  int most_frequent_word_count = 0;
-  for(int i = 0; i < 10; i++) {
-    most_frequent_word = find_most_frequent_word(map);
-    most_frequent_word_count = map_get(&map, most_frequent_word);
+  map_sort(&map, comparator);
 
-    printf("%d. %s --> %d\n", i, most_frequent_word, most_frequent_word_count); 
-    map_remove(&map, most_frequent_word);
+  for(size_t i = 0; i < 10; i++) {
+    printf("%s: %d\n", map.entries[i].key, map.entries[i].value);
   }
 
   free(lines);
