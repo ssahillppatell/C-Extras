@@ -5,11 +5,11 @@
 
 #define INITIAL_SIZE 100000
 
-Map map_create(size_t capacity) {
+Map map_create() {
     Map map = {0};
 
     map.size = 0;
-    map.capacity = capacity ? capacity : INITIAL_SIZE;
+    map.capacity = INITIAL_SIZE;
     map.entries = malloc(sizeof(Entry) * map.capacity);
     memset(map.entries, 0, sizeof(Entry) * map.capacity);
 

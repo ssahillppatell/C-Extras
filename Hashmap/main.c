@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  Map map = map_create(100000);
+  Map map = map_create();
 
   char **lines = string_split_by_character(content, NEW_LINE);
 
